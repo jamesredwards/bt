@@ -7,8 +7,8 @@ import bt
 import ffn
 import pandas as pd
 import numpy as np
-from matplotlib import pyplot as plt
-import pyprind
+#from matplotlib import pyplot as plt
+#import pyprind
 
 
 def run(*backtests):
@@ -181,8 +181,8 @@ class Backtest(object):
 
         # loop through dates
         # init progress bar
-        if self.progress_bar:
-            bar = pyprind.ProgBar(len(self.dates), title=self.name, stream=1)
+        # if self.progress_bar:
+        #     bar = pyprind.ProgBar(len(self.dates), title=self.name, stream=1)
 
         # since there is a dummy row at time 0, start backtest at date 1.
         # we must still update for t0
@@ -191,8 +191,8 @@ class Backtest(object):
         # and for the backtest loop, start at date 1
         for dt in self.dates[1:]:
             # update progress bar
-            if self.progress_bar:
-                bar.update()
+            # if self.progress_bar:
+            #     bar.update()
 
             # update strategy
             self.strategy.update(dt)
@@ -201,9 +201,9 @@ class Backtest(object):
                 self.strategy.run()
                 # need update after to save weights, values and such
                 self.strategy.update(dt)
-            else:
-                if self.progress_bar:
-                    bar.stop()
+            # else:
+                # if self.progress_bar:
+                #     bar.stop()
 
         self.stats = self.strategy.prices.calc_perf_stats()
         self._original_prices = self.strategy.prices
@@ -330,66 +330,66 @@ class Result(ffn.GroupStats):
         key = self._get_backtest(backtest)
         self[key].display_monthly_returns()
 
-    def plot_weights(self, backtest=0, filter=None,
-                     figsize=(15, 5), **kwds):
-        """
-        Plots the weights of a given backtest over time.
+    # def plot_weights(self, backtest=0, filter=None,
+    #                  figsize=(15, 5), **kwds):
+    #     """
+    #     Plots the weights of a given backtest over time.
 
-        Args:
-            * backtest (str, int): Backtest. Can be either a index (int) or the
-                name (str)
-            * filter (list, str): filter columns for specific columns. Filter
-                is simply passed as is to DataFrame[filter], so use something
-                that makes sense with a DataFrame.
-            * figsize ((width, height)): figure size
-            * kwds (dict): Keywords passed to plot
+    #     Args:
+    #         * backtest (str, int): Backtest. Can be either a index (int) or the
+    #             name (str)
+    #         * filter (list, str): filter columns for specific columns. Filter
+    #             is simply passed as is to DataFrame[filter], so use something
+    #             that makes sense with a DataFrame.
+    #         * figsize ((width, height)): figure size
+    #         * kwds (dict): Keywords passed to plot
 
-        """
-        key = self._get_backtest(backtest)
+    #     """
+    #     key = self._get_backtest(backtest)
 
-        if filter is not None:
-            data = self.backtests[key].weights[filter]
-        else:
-            data = self.backtests[key].weights
+    #     if filter is not None:
+    #         data = self.backtests[key].weights[filter]
+    #     else:
+    #         data = self.backtests[key].weights
 
-        data.plot(figsize=figsize, **kwds)
+    #     data.plot(figsize=figsize, **kwds)
 
-    def plot_security_weights(self, backtest=0, filter=None,
-                              figsize=(15, 5), **kwds):
-        """
-        Plots the security weights of a given backtest over time.
+    # def plot_security_weights(self, backtest=0, filter=None,
+    #                           figsize=(15, 5), **kwds):
+    #     """
+    #     Plots the security weights of a given backtest over time.
 
-        Args:
-            * backtest (str, int): Backtest. Can be either a index (int) or the
-                name (str)
-            * filter (list, str): filter columns for specific columns. Filter
-                is simply passed as is to DataFrame[filter], so use something
-                that makes sense with a DataFrame.
-            * figsize ((width, height)): figure size
-            * kwds (dict): Keywords passed to plot
+    #     Args:
+    #         * backtest (str, int): Backtest. Can be either a index (int) or the
+    #             name (str)
+    #         * filter (list, str): filter columns for specific columns. Filter
+    #             is simply passed as is to DataFrame[filter], so use something
+    #             that makes sense with a DataFrame.
+    #         * figsize ((width, height)): figure size
+    #         * kwds (dict): Keywords passed to plot
 
-        """
-        key = self._get_backtest(backtest)
+    #     """
+    #     key = self._get_backtest(backtest)
 
-        if filter is not None:
-            data = self.backtests[key].security_weights[filter]
-        else:
-            data = self.backtests[key].security_weights
+    #     if filter is not None:
+    #         data = self.backtests[key].security_weights[filter]
+    #     else:
+    #         data = self.backtests[key].security_weights
 
-        data.plot(figsize=figsize, **kwds)
+    #     data.plot(figsize=figsize, **kwds)
 
-    def plot_histogram(self, backtest=0, **kwds):
-        """
-        Plots the return histogram of a given backtest over time.
+    # def plot_histogram(self, backtest=0, **kwds):
+    #     """
+    #     Plots the return histogram of a given backtest over time.
 
-        Args:
-            * backtest (str, int): Backtest. Can be either a index (int) or the
-                name (str)
-            * kwds (dict): Keywords passed to plot_histogram
+    #     Args:
+    #         * backtest (str, int): Backtest. Can be either a index (int) or the
+    #             name (str)
+    #         * kwds (dict): Keywords passed to plot_histogram
 
-        """
-        key = self._get_backtest(backtest)
-        self[key].plot_histogram(**kwds)
+    #     """
+    #     key = self._get_backtest(backtest)
+    #     self[key].plot_histogram(**kwds)
 
     def _get_backtest(self, backtest):
         # based on input order
@@ -466,39 +466,39 @@ class RandomBenchmarkResult(Result):
         self.r_stats = self.stats.drop(self.base_name, axis=1)
         self.b_stats = self.stats[self.base_name]
 
-    def plot_histogram(self, statistic='monthly_sharpe',
-                       figsize=(15, 5), title=None,
-                       bins=20, **kwargs):
-        """
-        Plots the distribution of a given statistic. The histogram
-        represents the distribution of the random strategies' statistic
-        and the vertical line is the value of the benchmarked strategy's
-        statistic.
+    # def plot_histogram(self, statistic='monthly_sharpe',
+    #                    figsize=(15, 5), title=None,
+    #                    bins=20, **kwargs):
+    #     """
+    #     Plots the distribution of a given statistic. The histogram
+    #     represents the distribution of the random strategies' statistic
+    #     and the vertical line is the value of the benchmarked strategy's
+    #     statistic.
 
-        This helps you determine if your strategy is statistically 'better'
-        than the random versions.
+    #     This helps you determine if your strategy is statistically 'better'
+    #     than the random versions.
 
-        Args:
-            * statistic (str): Statistic - any numeric statistic in
-                Result is valid.
-            * figsize ((x, y)): Figure size
-            * title (str): Chart title
-            * bins (int): Number of bins
-            * kwargs (dict): Passed to pandas hist function.
+    #     Args:
+    #         * statistic (str): Statistic - any numeric statistic in
+    #             Result is valid.
+    #         * figsize ((x, y)): Figure size
+    #         * title (str): Chart title
+    #         * bins (int): Number of bins
+    #         * kwargs (dict): Passed to pandas hist function.
 
-        """
-        if statistic not in self.r_stats.index:
-            raise ValueError("Invalid statistic. Valid statistics"
-                             "are the statistics in self.stats")
+    #     """
+    #     if statistic not in self.r_stats.index:
+    #         raise ValueError("Invalid statistic. Valid statistics"
+    #                          "are the statistics in self.stats")
 
-        if title is None:
-            title = '%s histogram' % statistic
+    #     if title is None:
+    #         title = '%s histogram' % statistic
 
-        plt.figure(figsize=figsize)
+    #     plt.figure(figsize=figsize)
 
-        ser = self.r_stats.ix[statistic]
+    #     ser = self.r_stats.ix[statistic]
 
-        ax = ser.hist(bins=bins, figsize=figsize, normed=True, **kwargs)
-        ax.set_title(title)
-        plt.axvline(self.b_stats[statistic], linewidth=4)
-        ser.plot(kind='kde')
+    #     ax = ser.hist(bins=bins, figsize=figsize, normed=True, **kwargs)
+    #     ax.set_title(title)
+    #     plt.axvline(self.b_stats[statistic], linewidth=4)
+    #     ser.plot(kind='kde')
