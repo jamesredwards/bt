@@ -1,0 +1,6 @@
+cython
+future
+ffn
+ipython
+coverage
+codecov
